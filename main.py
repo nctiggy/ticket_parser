@@ -3,7 +3,6 @@
 import json
 import csv
 import sys
-import pprint
 
 file = sys.argv[1]
 out_file = sys.argv[2]
@@ -15,6 +14,7 @@ with open(file) as f:
 
 tickets = json.loads(json.dumps(data))
 final_json = {'tickets': []}
+x = set([])
 
 for ticket in tickets:
     final_ticket = {}
@@ -28,9 +28,20 @@ for ticket in tickets:
     for item in items:
         element = item.split(":")
         if len(element) == 2:
-            key = element[0]
-            early_value = element[1].strip("'")
-            value = early_value.strip("'")
+            key = element[0].lower().strip()
+            if (
+                "echo" in key or
+                "h" == key or
+                "o" == key or
+                "t" == key or
+                "http" == key or
+                "( e" == key
+            ):
+                print(item)
+                continue
+            x.add(key)
+            early_value = element[1].replace("'", "")
+            value = early_value.strip(" ").lower()
             # Add the well formed JSON into the final p
             final_ticket.update({key: value})
 
@@ -40,7 +51,8 @@ for ticket in tickets:
     final_ticket.update(ticket)
     final_json['tickets'].append(final_ticket)
 
-pprint.pprint(final_json)
+print(x)
+# pprint.pprint(final_json)
 
 # Store records for later use
 records = []
