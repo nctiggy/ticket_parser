@@ -14,7 +14,6 @@ with open(file) as f:
 
 tickets = json.loads(json.dumps(data))
 final_json = {'tickets': []}
-x = set([])
 
 for ticket in tickets:
     final_ticket = {}
@@ -37,9 +36,8 @@ for ticket in tickets:
                 "http" == key or
                 "( e" == key
             ):
-                print(item)
+                print(f'ignoring: {item}')
                 continue
-            x.add(key)
             early_value = element[1].replace("'", "")
             value = early_value.strip(" ").lower()
             # Add the well formed JSON into the final p
@@ -50,9 +48,6 @@ for ticket in tickets:
     # Add original ticket minus description to the new json object
     final_ticket.update(ticket)
     final_json['tickets'].append(final_ticket)
-
-print(x)
-# pprint.pprint(final_json)
 
 # Store records for later use
 records = []
